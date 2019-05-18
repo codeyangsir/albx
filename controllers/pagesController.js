@@ -1,3 +1,4 @@
+var querystring = require('querystring')
 // 返回前台首页
 exports.getIndexPage = (req,res) => {
     res.render('index.ejs')
@@ -10,7 +11,13 @@ exports.getListPage = (req,res) => {
 }
 // 获取后台首页
 exports.getAdminPage = (req,res) => {
-    res.render('admin/index.ejs')
+    //res.render('admin/index.ejs')
+    // 因为是使用session进行了状态保持，所以这里应该获取req.session
+    if(req.session.isLogin && req.session.isLogin == 'true'){
+        res.render('admin/index.ejs')
+    }else{
+        res.redirect('/admin/login')
+    }
 }
 exports.getCategoriesPage = (req,res) => {
     res.render('admin/categories.ejs')
