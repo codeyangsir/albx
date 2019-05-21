@@ -6,6 +6,8 @@ var pagesController = require('./controllers/pagesController')
 var usersController = require('./controllers/usersController')
 // 引入分类管理控制器
 var cateController = require('./controllers/cateConreoller')
+// 引入文章控制器
+var postsController = require('./controllers/postController')
 //创建路由模块对象
 var router = express.Router()
 
@@ -42,7 +44,7 @@ router.get('/',pagesController.getIndexPage)
       .get('/detail',pagesController.getDetailPage)
       .post('/delCategories',cateController.delCategories)
       //文章路由配置
-      //.get('/getAllPostList',postsController.getAllPostList)
+      .get('/getAllPostList',postsController.getAllPostList)
 
 
 
