@@ -8,6 +8,9 @@ var usersController = require('./controllers/usersController')
 var cateController = require('./controllers/cateConreoller')
 // 引入文章控制器
 var postsController = require('./controllers/postController')
+// 引入文件上传控制器
+//var uploadController = require('./controllers/uploadController')
+var uploadController = require('./controllers/uploadController')
 //创建路由模块对象
 var router = express.Router()
 
@@ -45,6 +48,10 @@ router.get('/',pagesController.getIndexPage)
       .post('/delCategories',cateController.delCategories)
       //文章路由配置
       .get('/getAllPostList',postsController.getAllPostList)
+      .post('/addPost',postsController.addPost)
+
+// 文件上传
+      .post('/uploadFile',uploadController.doUpload)
 
 
 

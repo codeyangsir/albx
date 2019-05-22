@@ -8,10 +8,21 @@ module.exports ={
     //4.筛选时第状态参数
     getAllPostList(query,callback){
         var sql = `select posts.id,posts.title,posts.created,posts.status,users.nickname,categories.name
-        from posts
-        inner join users on posts.user_id = users.id
-        inner join categories on posts.category_id = categories.id
-        limit ${(query.pageNum-1)*query.pageSize},${query.pageSize}`
+                    from posts
+                    inner join users on posts.user_id = users.id
+                    inner join categories on posts.category_id = categories.id
+                    where 1 = 1 `
+        // where应该在固定的位置，在这个场景中，它在join和order by 之间
+        // 拼接 where
+        if(query.category_id){
+            sql += " and category_id = " + query.category_id
+        }
+        if(query.status){
+            sql += ` and posts.status ='${query.status}'  `
+        }
+
+        sql +=` ORDER BY created DESC
+                limit ${(query.pageNum-1)*query.pageSize},${query.pageSize}`
         //看看是不是你想要的数据
         //console.log(sql)
         // query在进行查询的时候一次只能查询一个结果集，如果在Sql中添加多条查询语句，那么results也只能接收到一个
@@ -33,6 +44,18 @@ module.exports ={
                 })
             }
         })
-    }
+    },
+
+     // 新增文章
+     addPost(obj,callback){
+        var sql = 'insert into posts values(null,?,?,?,?,?,?,?,?,?,?)'
+        connection.query(sql,[obj.slug,obj.title,obj.feature,obj.created,obj.content,obj.views,obj.likes,obj.status,obj.user_id,obj.category_id],(err,results) => {
+            if(err){
+                callback(err)
+            }else{
+                callback(null,results)
+            }
+        })
+    },
 }
 

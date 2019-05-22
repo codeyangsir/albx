@@ -1,4 +1,5 @@
 var postsModule = require('../dataModules/postModule')
+var moment = require('moment')
 module.exports = {
     // 获取所有文章数据
     getAllPostList(req,res){
@@ -18,6 +19,32 @@ module.exports = {
                 res.json({
                     code:200,
                     data:data
+                })
+            }
+        })
+    },
+
+    //实现文章新增 
+    addPost(req,res){
+        //console.log(req.body)
+        var obj = req.body
+        obj['views'] = 0
+        obj['likes'] = 0
+        obj['user_id'] = req.session.currentUser.id
+        obj.created = moment(obj.created).format('YYYY-MM-DD HH:mm:ss')//做年月日时分秒的处理
+        //console.log(obj)
+
+        //实现新增
+        postsModule.addPost(obj,(err) =>{
+            if(err){
+                res.json({
+                    code:201,
+                    msg:'新增失败'
+                })
+            }else{
+                res.json({
+                        code:200,
+                        msg:'新增成功'
                 })
             }
         })

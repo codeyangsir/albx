@@ -4,13 +4,14 @@ $(function(){
     var pageNum=1
 
     //发起ajax获取所有文章数据
-    function initData(){
+    function initData(query={}){
         $.ajax({
             type:'get',
             url:'/getAllPostList',
             data:{
                 pageNum,
-                pageSize
+                pageSize,
+                ...query
             },
             dataType:'json',
             success:function(result){
@@ -19,11 +20,31 @@ $(function(){
                 var html = template('postListTemp',result.data)
                 $('tbody').html(html)
                 //生成分页结构
-                setPagnator(Math.ceil(result.data.total/pageSize))
+                setPagnator(Math.ceil(result.data.total / pageSize))
             }
         })
     }
-    initData()
+    initData();
+        
+    //加载分类下拉列表数据
+    //()()-
+    (function(){
+        $.ajax({
+            type:'get',
+            url:'/getCategories',
+            dataType:'json',
+            success:function(result){
+                console.log(result)
+                //调用模块引擎生成动态结构
+                //直接拼字符串简单一点
+                var html = '<option value="all">所有分类</option>'
+                for (var i=0;i<result.length;i++){
+                    html +=`<option value="${result[i].id}">${result[i].name}</option>`
+                }
+                $('.cateSelector').html(html)
+            }
+        })
+    })()
     
     // 生成分页结构并实现分页业务逻辑
     // - bootstrapMajorVersion：重要属性，必须正确的设置，如果错误后期不能生成分页结构。我们现在用的bootstrap是3.3.7，所以对应的分页区域的结构要使用ul
@@ -36,6 +57,7 @@ $(function(){
         $('.pagination').bootstrapPaginator({
             bootstrapMajorVersion:3,
             currentPage:pageNum,
+            // totalPages：会根据这值生成分页单击按钮
             totalPages:total,
             onPageClicked:function(event,originalEvent,type,page){
                 // page就是当前需要获取数据的页码
@@ -49,5 +71,28 @@ $(function(){
             }
         })
     }
+
+    // 点击筛选实现数据的筛选
+    $('.btnFilter').on('click',function(){
+        var query = {} //query=一个对象
+        //收集
+        var cate =$('.cateSelector').val()
+        var statu =$('.statuSelector').val()
+        console.log(cate,statu)
+        // 如果获取到的value是all，说明用户并没有选择这个条件
+        if(cate != 'all'){
+            //键=值    posts表中的字段category_id
+            query['category_id'] = cate
+        }
+        if(statu != 'all'){
+            query['status'] = statu
+        }
+        //看一下query能不能正常拿到
+        //console.log(query)
+        //根据条件获取数据
+        //initData(筛选条件)
+        initData(query)
+
+    })
     
 })
