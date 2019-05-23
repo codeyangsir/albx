@@ -58,3 +58,4 @@ router.get('/',pagesController.getIndexPage)
       
 //暴露路由方法
 module.exports = router
+//之前上传不成功,重新上传
