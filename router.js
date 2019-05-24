@@ -11,6 +11,8 @@ var postsController = require('./controllers/postController')
 // 引入文件上传控制器
 //var uploadController = require('./controllers/uploadController')
 var uploadController = require('./controllers/uploadController')
+// 引入menu控制器
+var menuController = require('./controllers/menuController')
 //创建路由模块对象
 var router = express.Router()
 
@@ -49,6 +51,12 @@ router.get('/',pagesController.getIndexPage)
       //文章路由配置
       .get('/getAllPostList',postsController.getAllPostList)
       .post('/addPost',postsController.addPost)
+      .get('/getPostById',postsController.getPostById)
+      .post('/editPostById',postsController.editPostById)
+
+
+       // 导航菜单块路由配置
+       .post('/addMenu',menuController.addMenu)
 
 // 文件上传
       .post('/uploadFile',uploadController.doUpload)

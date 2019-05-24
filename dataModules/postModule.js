@@ -57,5 +57,34 @@ module.exports ={
             }
         })
     },
+
+    //根据id获取文章数据
+    getPostById(id,callback){
+        var sql = `select * from posts where id = ${id}`
+        connection.query(sql,(err,results) => {
+            if(err){
+                callback(err)
+            }else{
+                // 将数据和总数一起返回
+                // [{cnt:4}] > {cnt,4}
+                //results[0]查询返回的一个结果值
+                callback(null,results[0])
+                //console.log(results[0])
+            }
+        })
+    },
+
+    //编辑文章
+    editPostById(obj,callback){
+        // 在编辑的时候,使用占位符有一个优点:没有传入的值不会进行修改
+        var sql = 'update posts set ? where id = ?'
+        connection.query(sql,[obj,obj.id],(err,results) => {
+            if(err){
+                callback(err)
+            }else{
+                callback(null,results)
+            }
+        })
+    },
 }
 

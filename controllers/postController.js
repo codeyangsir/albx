@@ -48,5 +48,45 @@ module.exports = {
                 })
             }
         })
-    }
+    },
+
+    //根据文章id获取指定的文章数据
+    getPostById(req,res){
+        var id = req.query.id
+       // console.log(id)
+        postsModule.getPostById(id,(err,data) =>{
+            if(err){
+                res.json({
+                    code:201,
+                    msg:'服务器异常'
+                })
+            }else{
+                data.created = moment(data.created).format('YYYY-MM-DDTHH:mm')
+                res.json({
+                        code:200,
+                        msg:'获取成功',
+                        data:data
+                })
+            }
+        })
+    },
+
+     // 根据id号来实现文章的编辑功能
+     editPostById(req,res){
+        // console.log(req,res)看看有没有拿到数据
+        postsModule.editPostById(req.body,(err) =>{
+            if(err){
+                res.json({
+                    code:201,
+                    msg:'编辑失败'
+                })
+            }else{
+                res.json({
+                    code:200,
+                    msg:'编辑成功'
+                })
+            }
+        })
+     }
+
 }
